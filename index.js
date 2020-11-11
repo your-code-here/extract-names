@@ -10,7 +10,7 @@ const processMusic = require('./helper/process-music')
 
 const DATASET_DIR_NAME = 'datasets'
 const OUTPUT_DIR_NAME = 'data-result'
-const EXCLUDE_ROLES = ['Presenter', 'Performing Group'].map(o => _.trim(_.toLower(o)))
+const EXCLUDE_ROLES = ['.','Presenter', 'Performing Group'].map(o => _.trim(_.toLower(o)))
 const EXCLUDE_NAMES = ['nil'];
 
 const musicFile = {

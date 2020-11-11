@@ -34,7 +34,8 @@ module.exports = function process(fileObj, options) {
         delimiter: ',',
         ltrim: true,
         rtrim: true,
-        // to_line: 30,
+        // from_line: 1,
+        // to_line: 100,
         on_record: (record) => _.pick(record, fileObj.cols)
     });
 
@@ -42,9 +43,14 @@ module.exports = function process(fileObj, options) {
         // .pipe(fs.createWriteStream(outputFilePath));
 
     const exportResult = function(result){
-        result = _.map(result, o => {
-           return _.map(o, i => _.trim(i));
+        result = _.filter(result, function(o) {
+            return (o[1] && _.trim(o[1]) !== '') || (o[2] && _.trim(o[2]) !== '');
         });
+
+        console.log(result);
+        // result = _.map(result, o => {
+        //    return _.map(o, i => _.trim(i));
+        // });
 
         // STRINGIFIER
         const stringifier = stringify(result, {
@@ -94,6 +100,8 @@ module.exports = function process(fileObj, options) {
     //     stringifier.end();
     // });
 
+    const commaRegex = /[,、,]/i;
+
     // EXTRACT DATA FROM STRING
     const extractString = transform(function(data){
         data = _.mapValues(data, function(o) {
@@ -116,6 +124,7 @@ module.exports = function process(fileObj, options) {
     });
 
     // FILTER ROLES
+
     const filterRoles = transform(function(data){
         data = _.filter(data, function(o) {
             return !_.includes(EXCLUDE_ROLES, _.toLower(_.trim(_.head(o))));
@@ -123,10 +132,27 @@ module.exports = function process(fileObj, options) {
         // console.log(data);
         return data;
     }).on('data', function(row){
-        output = _.concat(output, row);
+        if(_.size(row) > 0){
+
+            row = _.map(row, o => {
+                let _tmp = _.map(o, i => {
+                    i = _.split(i, commaRegex);
+                    return _.map(i, j => _.trim(j));
+                });
+
+                if(_.size(_tmp[0]) === 1 &&  _.size(_tmp[1]) > 1){
+                    _tmp[0] = _.fill(Array(_.size(_tmp[1])), _.head(_tmp[0]));
+                }
+
+                _tmp = _.zipWith(_tmp[0], _tmp[1], _tmp[2], function(role, eng, chi) {
+                    return [role, eng, chi];
+                });
+                return _tmp;
+            });
+            output = _.concat(output, row);
+        }
     }).on('end', function() {
-        // console.log(output);
-        exportResult(output);
+        exportResult(_.flatten(output));
     });
 
     // READER STREAM
