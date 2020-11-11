@@ -7,8 +7,21 @@ const path = require('path')
 const parse = require('csv-parse')
 const transform = require('stream-transform')
 const stringify = require('csv-stringify')
-
 const _ = require('lodash')
+
+const commaRegex = /[,、,]/i;
+
+const isEmpty = function(value){
+    if(!value) return true;
+    value = _.trim(value);
+    return ['', 'nil', '.'].includes(value);
+}
+
+const isEqual = function(str1, str2){
+    str1 = _.trim(_.toLower(str1));
+    str2 = _.trim(_.toLower(str2));
+    return str1 === str2;
+}
 
 module.exports = function process(fileObj, options) {
     // OPTIONS
@@ -22,6 +35,7 @@ module.exports = function process(fileObj, options) {
     // PATHS
     const inputFilePath = path.resolve(DATASET_DIR_NAME, fileObj.fileName);
     const outputFilePath = path.resolve(OUTPUT_DIR_NAME, fileObj.fileName);
+    const resultFilePath = path.resolve(OUTPUT_DIR_NAME, 'final-' + fileObj.fileName);
 
     // OUTPUT
     let output = []
@@ -36,24 +50,36 @@ module.exports = function process(fileObj, options) {
         rtrim: true,
         // from_line: 1,
         // to_line: 100,
-        on_record: (record) => _.pick(record, fileObj.cols)
+        on_record: record => _.pick(record, fileObj.cols)
     });
 
-
-        // .pipe(fs.createWriteStream(outputFilePath));
-
     const exportResult = function(result){
-        result = _.filter(result, function(o) {
-            return (o[1] && _.trim(o[1]) !== '') || (o[2] && _.trim(o[2]) !== '');
-        });
+        result = _.filter(result, o => {
 
-        console.log(result);
-        // result = _.map(result, o => {
-        //    return _.map(o, i => _.trim(i));
-        // });
+            // If role empty
+            if(isEmpty(o[0])) return false;
 
-        // STRINGIFIER
-        const stringifier = stringify(result, {
+            // If eng and chi are empty
+            if(isEmpty(o[1]) && isEmpty(o[2])) return false;
+
+            return !_.some(EXCLUDE_NAMES, i => {
+                if (!isEmpty(o[1])) {
+                    if (isEqual(o[1], i)) return true;
+                    if (new RegExp(i, 'i').test(o[1])) return true;
+                }
+                if (!isEmpty(o[2])) {
+                    if (isEqual(o[2], i)) return true;
+                    if (new RegExp(i, 'i').test(o[2])) return true;
+                }
+                return false;
+            });
+
+        })
+
+        // console.log(result);
+
+        // STRINGIFIER OUTPUT
+        stringify(result, {
             header: true,
             columns: {
                 role: 'Role',
@@ -64,45 +90,32 @@ module.exports = function process(fileObj, options) {
             if (err) throw err;
             fs.writeFile(outputFilePath, output, (err) => {
                 if (err) throw err;
-                console.log(`${outputFilePath} saved.`);
+                console.log(`${outputFilePath} saved. [Result: ${result.length}]`);
+            });
+        });
+
+        // STRINGIFIER FINAL RESULT
+        let finalResult = _.map(result, o => _.tail(o));
+        finalResult = _.uniqWith(finalResult, _.isEqual);
+        stringify(finalResult, {
+            header: true,
+            columns: {
+                eng: 'Eng',
+                chi: 'Chi'
+            }
+        }, function(err, output){
+            if (err) throw err;
+            fs.writeFile(resultFilePath, output, (err) => {
+                if (err) throw err;
+                console.log(`${resultFilePath} saved. [Result: ${finalResult.length}]`);
             });
         });
     }
 
-    // parser.on('data', function (row) {
-        // console.log(row);
-        // for (const col of fileObj.cols) {
-        //     let parts = _.split(row[col], ';'); // Tách bởi dấu ;
-        //     parts = _.compact(parts); // Loại bỏ các giá trị false, 0, '' ...
-        //     parts = _.map(parts, part => {
-        //         let [key, val] = _.split(part, /[：:︰﹕]/, 2);
-        //         key = _.trim(_.toLower(key));
-        //         val = _.replace(val, /\n/g, " "); // Remove line-break
-        //         // val = split(val, ',').map(o => trim(o));
-        //         return [key, val];
-        //     }); // Tách [role,[names]]
-        //     parts = _.filter(parts, part => !EXCLUDE_ROLES.includes(part[0])); // Loại bỏ các roles không hợp lệ
-        //     parts = _.map(parts, part => part[1]); // Chỉ lấy phần name, bỏ phần role
-        //     parts = _.flattenDeep(parts); // Làm phẳng array
-        //     output = _.concat(output, parts); // Merge vào output
-        // }
-    // });
-    //
-    // parser.on('end', async function () {
-    //     output = _.compact(output); // Loại bỏ các giá trị trống
-    //     output = _.filter(output, o => !EXCLUDE_NAMES.includes(o)); // Loại bỏ các tên không hợp lệ
-    //     output = _.uniq(output); // Loại bỏ các giá trị trùng lặp
-    //     output = _.uniq(output); // Loại bỏ các giá trị trùng lặp
-    //     console.log(`${fileObj.fileName} result: %d`, output.length);
-    //     for (let i = 0; i < output.length; i++) {
-    //         stringifier.write([_.trim(output[i])]);
-    //     }
-    //     stringifier.end();
-    // });
-
-    const commaRegex = /[,、,]/i;
-
-    // EXTRACT DATA FROM STRING
+    /**
+     * EXTRACT DATA FROM STRING
+     * @type {*|transform.Transformer}
+     */
     const extractString = transform(function(data){
         data = _.mapValues(data, function(o) {
             let parts = _.split(o, ';'); // Split by ;
@@ -111,29 +124,32 @@ module.exports = function process(fileObj, options) {
             return parts;
         });
 
-        const eng = data[fileObj.cols[0]];
-        const chi = data[fileObj.cols[1]];
+        const PresEng = data[fileObj.cols[0]];
+        const PresChi = data[fileObj.cols[1]];
+        const WorkEng = data[fileObj.cols[2]];
+        const WorkChi = data[fileObj.cols[3]];
 
-        const output = [];
+        let output = [];
 
-        for(let i = 0; i < _.size(eng); i++){
-            output.push(_.concat(eng[i],_.tail(chi[i])));
+        for(let i = 0; i < _.size(PresEng); i++){
+                output.push(_.concat(PresEng[i],_.tail(PresChi[i])));
+                output.push(_.concat(WorkEng[i], _.tail(WorkChi[i])));
         }
-        // console.log(output);
+
         return output;
     });
 
-    // FILTER ROLES
-
+    /**
+     * FILTER ROLES
+     * @type {this}
+     */
     const filterRoles = transform(function(data){
-        data = _.filter(data, function(o) {
-            return !_.includes(EXCLUDE_ROLES, _.toLower(_.trim(_.head(o))));
+        return _.filter(data, function(o) {
+            const role = _.toLower(_.trim(_.head(o)));
+            return !_.includes(EXCLUDE_ROLES, role);
         });
-        // console.log(data);
-        return data;
     }).on('data', function(row){
         if(_.size(row) > 0){
-
             row = _.map(row, o => {
                 let _tmp = _.map(o, i => {
                     i = _.split(i, commaRegex);
@@ -149,6 +165,7 @@ module.exports = function process(fileObj, options) {
                 });
                 return _tmp;
             });
+
             output = _.concat(output, row);
         }
     }).on('end', function() {
