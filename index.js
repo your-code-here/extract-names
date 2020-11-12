@@ -3,6 +3,7 @@
 \***********************/
 const _ = require('lodash')
 const processMusic = require('./helper/process-music')
+const processDance = require('./helper/process-dance')
 
 /***********************\
  *      VARIABLES
@@ -10,11 +11,11 @@ const processMusic = require('./helper/process-music')
 
 const DATASET_DIR_NAME = 'datasets'
 const OUTPUT_DIR_NAME = 'data-result'
-const EXCLUDE_ROLES = ['.','Presenter', 'Performing Group'].map(o => _.trim(_.toLower(o)))
+const EXCLUDE_ROLES = ['.', 'Presenter', 'Performing Group'].map(o => _.trim(_.toLower(o)))
 const EXCLUDE_NAMES = [
     '小學', '中學', '團', '社', '制作', '公司', '設計', '舞蹈', '協會', '協進會', '班',
     'centre', 'ltd', 'limited', 'group', 'production', 'makeup', 'school', 'college', 'ccdc',
-    'op.','no.'
+    'op.', 'no.'
 ];
 
 const musicFile = {
@@ -28,7 +29,14 @@ const musicFile = {
 }
 const danceFile = {
     fileName: "dance.csv",
-    cols: ['Event'],
+    cols: [
+        '演出/製作',
+        'Cast and Production',
+        '藝術總監',
+        'Name of Artistic Director',
+        '編舞',
+        'Choreographers'
+    ],
 }
 const dramaFile = {
     fileName: "drama.csv",
@@ -53,7 +61,14 @@ const exampleFile = {
  *      MAIN APP
 \***********************/
 
-processMusic(musicFile, {
+// processMusic(musicFile, {
+//     DATASET_DIR_NAME,
+//     OUTPUT_DIR_NAME,
+//     EXCLUDE_ROLES,
+//     EXCLUDE_NAMES
+// });
+
+processDance(danceFile, {
     DATASET_DIR_NAME,
     OUTPUT_DIR_NAME,
     EXCLUDE_ROLES,

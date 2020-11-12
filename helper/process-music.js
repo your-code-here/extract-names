@@ -11,13 +11,13 @@ const _ = require('lodash')
 
 const commaRegex = /[,、,]/i;
 
-const isEmpty = function(value){
-    if(!value) return true;
+const isEmpty = function (value) {
+    if (!value) return true;
     value = _.trim(value);
     return ['', 'nil', '.'].includes(value);
 }
 
-const isEqual = function(str1, str2){
+const isEqual = function (str1, str2) {
     str1 = _.trim(_.toLower(str1));
     str2 = _.trim(_.toLower(str2));
     return str1 === str2;
@@ -53,14 +53,14 @@ module.exports = function process(fileObj, options) {
         on_record: record => _.pick(record, fileObj.cols)
     });
 
-    const exportResult = function(result){
+    const exportResult = function (result) {
         result = _.filter(result, o => {
 
             // If role empty
-            if(isEmpty(o[0])) return false;
+            if (isEmpty(o[0])) return false;
 
             // If eng and chi are empty
-            if(isEmpty(o[1]) && isEmpty(o[2])) return false;
+            if (isEmpty(o[1]) && isEmpty(o[2])) return false;
 
             return !_.some(EXCLUDE_NAMES, i => {
                 if (!isEmpty(o[1])) {
@@ -86,7 +86,7 @@ module.exports = function process(fileObj, options) {
                 eng: 'Eng',
                 chi: 'Chi'
             }
-        }, function(err, output){
+        }, function (err, output) {
             if (err) throw err;
             fs.writeFile(outputFilePath, output, (err) => {
                 if (err) throw err;
@@ -103,7 +103,7 @@ module.exports = function process(fileObj, options) {
                 eng: 'Eng',
                 chi: 'Chi'
             }
-        }, function(err, output){
+        }, function (err, output) {
             if (err) throw err;
             fs.writeFile(resultFilePath, output, (err) => {
                 if (err) throw err;
@@ -116,8 +116,8 @@ module.exports = function process(fileObj, options) {
      * EXTRACT DATA FROM STRING
      * @type {*|transform.Transformer}
      */
-    const extractString = transform(function(data){
-        data = _.mapValues(data, function(o) {
+    const extractString = transform(function (data) {
+        data = _.mapValues(data, function (o) {
             let parts = _.split(o, ';'); // Split by ;
             parts = _.compact(parts); // Remove false, 0, '' ...
             parts = _.map(parts, p => _.split(p, /[：:︰﹕]/, 2));
@@ -131,9 +131,9 @@ module.exports = function process(fileObj, options) {
 
         let output = [];
 
-        for(let i = 0; i < _.size(PresEng); i++){
-                output.push(_.concat(PresEng[i],_.tail(PresChi[i])));
-                output.push(_.concat(WorkEng[i], _.tail(WorkChi[i])));
+        for (let i = 0; i < _.size(PresEng); i++) {
+            output.push(_.concat(PresEng[i], _.tail(PresChi[i])));
+            output.push(_.concat(WorkEng[i], _.tail(WorkChi[i])));
         }
 
         return output;
@@ -143,24 +143,24 @@ module.exports = function process(fileObj, options) {
      * FILTER ROLES
      * @type {this}
      */
-    const filterRoles = transform(function(data){
-        return _.filter(data, function(o) {
+    const filterRoles = transform(function (data) {
+        return _.filter(data, function (o) {
             const role = _.toLower(_.trim(_.head(o)));
             return !_.includes(EXCLUDE_ROLES, role);
         });
-    }).on('data', function(row){
-        if(_.size(row) > 0){
+    }).on('data', function (row) {
+        if (_.size(row) > 0) {
             row = _.map(row, o => {
                 let _tmp = _.map(o, i => {
                     i = _.split(i, commaRegex);
                     return _.map(i, j => _.trim(j));
                 });
 
-                if(_.size(_tmp[0]) === 1 &&  _.size(_tmp[1]) > 1){
+                if (_.size(_tmp[0]) === 1 && _.size(_tmp[1]) > 1) {
                     _tmp[0] = _.fill(Array(_.size(_tmp[1])), _.head(_tmp[0]));
                 }
 
-                _tmp = _.zipWith(_tmp[0], _tmp[1], _tmp[2], function(role, eng, chi) {
+                _tmp = _.zipWith(_tmp[0], _tmp[1], _tmp[2], function (role, eng, chi) {
                     return [role, eng, chi];
                 });
                 return _tmp;
@@ -168,7 +168,7 @@ module.exports = function process(fileObj, options) {
 
             output = _.concat(output, row);
         }
-    }).on('end', function() {
+    }).on('end', function () {
         exportResult(_.flatten(output));
     });
 
@@ -178,5 +178,5 @@ module.exports = function process(fileObj, options) {
         .pipe(parser)
         .pipe(extractString)
         .pipe(filterRoles);
-        // .pipe(fs.createWriteStream(outputFilePath));
+    // .pipe(fs.createWriteStream(outputFilePath));
 }
