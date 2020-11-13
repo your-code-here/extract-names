@@ -8,12 +8,12 @@ const _ = require('lodash')
         DECLARE
 \***********************/
 
-const commaRegex = /[,、,\n]/gi
+const commaRegex = /[,、,;\n]/gi
 
 function isEmpty(value) {
     if (!value) return true;
     value = _.trim(value);
-    return ['', '-', 'nil', '.', '/'].includes(value);
+    return ['', '-', 'nil', '.', '/', 'n.a.'].includes(value);
 }
 
 function isEqual(str1, str2) {

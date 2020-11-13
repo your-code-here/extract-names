@@ -5,6 +5,7 @@ const _ = require('lodash')
 const processMusic = require('./helper/process-music')
 const processDance = require('./helper/process-dance')
 const processEvent = require('./helper/process-event')
+const processVa = require('./helper/process-va')
 
 /***********************\
  *      VARIABLES
@@ -42,6 +43,20 @@ const danceFile = {
 const dramaFile = { fileName: "drama.csv" }
 const theatreFile = { fileName: "theatre.csv" }
 const xiquFile = {fileName: "xiqu.csv"}
+const va1013File = {
+    fileName: "1013VA.csv",
+    cols: [
+        'participant_en',
+        'participant_tc'
+    ],
+}
+const va1318File = {
+    fileName: "1318VA.csv",
+    cols: [
+        'participant_en',
+        'participant_tc'
+    ],
+}
 
 const exampleFile = {
     fileName: "example.csv",
@@ -59,20 +74,10 @@ const options = {
     EXCLUDE_NAMES
 };
 
-// processMusic(musicFile, {
-//     DATASET_DIR_NAME,
-//     OUTPUT_DIR_NAME,
-//     EXCLUDE_ROLES,
-//     EXCLUDE_NAMES
-// });
-
-// processDance(danceFile, {
-//     DATASET_DIR_NAME,
-//     OUTPUT_DIR_NAME,
-//     EXCLUDE_ROLES,
-//     EXCLUDE_NAMES
-// });
-
+// processMusic(musicFile, options);
+// processDance(danceFile,options);
 // processEvent(dramaFile, options)
 // processEvent(theatreFile, options)
-processEvent(xiquFile, options)
+// processEvent(xiquFile, options)
+// processVa(va1013File, options)
+processVa(va1318File, options)

@@ -19,22 +19,15 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="02aaa347-b884-423a-b337-f002c95050cd" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/data-result/drama.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data-result/theatre.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data-result/xiqu.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/datasets/drama.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/datasets/theatre.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/datasets/xiqu.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helper/common.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helper/process-event.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_11_11_20__7_45_PM__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_11_11_20__7_45_PM__Default_Changelist_.xml" afterDir="false" />
+    <list default="true" id="02aaa347-b884-423a-b337-f002c95050cd" name="Default Changelist" comment="Update">
+      <change afterPath="$PROJECT_DIR$/data-result/1013VA.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/datasets/10-13 VA merged data_to_Tectura_20200916.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/datasets/1013VA.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/datasets/13-18 VA merged data_20200916.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/datasets/1318VA.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helper/process-va.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/drama.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/drama.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/theatre.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/theatre.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/xiqu.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/xiqu.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helper/process-dance.js" beforeDir="false" afterPath="$PROJECT_DIR$/helper/process-dance.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/helper/common.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -78,6 +71,14 @@
       <workItem from="1605061001408" duration="5104000" />
       <workItem from="1605199487346" duration="4402000" />
     </task>
+    <task id="LOCAL-00001" summary="Update">
+      <created>1605238031894</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1605238031894</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -97,6 +98,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Update" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update" />
   </component>
   <component name="WindowStateProjectService">
     <state x="711" y="344" key="#Notifications" timestamp="1605236124527">
@@ -115,6 +118,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="461" y="165" key="SettingsEditor/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1605236142230" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1605238135332">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1605238135332" />
     <state x="777" y="434" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1605230129654">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
