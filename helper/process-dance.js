@@ -9,35 +9,20 @@ const transform = require('stream-transform')
 const stringify = require('csv-stringify')
 const _ = require('lodash')
 
-const commaRegex = /[,、,]/i;
+const {
+    commaRegex,
+    isEmpty,
+    isEqual,
+    splitByComma,
+    clearRole
+} = require('./common');
 
-const isEmpty = function (value) {
-    if (!value) return true;
-    value = _.trim(value);
-    return ['', '-', 'nil', '.', '/'].includes(value);
-}
-
-const isEqual = function (str1, str2) {
-    str1 = _.trim(_.toLower(str1));
-    str2 = _.trim(_.toLower(str2));
-    return str1 === str2;
-}
-
-const splitByComma = function(str){
-    return _.split(str, commaRegex);
-}
-
-const clearRole = function(str){
-    return _.trim(_.replace(str, /^.+[：:︰﹕]/, ''));
-}
 
 module.exports = function process(fileObj, options) {
     // OPTIONS
     const {
         DATASET_DIR_NAME,
-        OUTPUT_DIR_NAME,
-        EXCLUDE_ROLES,
-        EXCLUDE_NAMES
+        OUTPUT_DIR_NAME
     } = options;
 
     // PATHS

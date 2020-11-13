@@ -20,10 +20,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02aaa347-b884-423a-b337-f002c95050cd" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/data-result/dance.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/datasets/dance.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data-result/drama.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data-result/theatre.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data-result/xiqu.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/datasets/drama.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/datasets/theatre.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/datasets/xiqu.xlsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helper/common.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helper/process-event.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_11_11_20__7_45_PM__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_11_11_20__7_45_PM__Default_Changelist_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helper/process-music.js" beforeDir="false" afterPath="$PROJECT_DIR$/helper/process-music.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/drama.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/drama.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/theatre.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/theatre.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/xiqu.csv" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/xiqu.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helper/process-dance.js" beforeDir="false" afterPath="$PROJECT_DIR$/helper/process-dance.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -88,17 +99,25 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="711" y="344" key="#Notifications" timestamp="1605062058040">
+    <state x="711" y="344" key="#Notifications" timestamp="1605236124527">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="711" y="344" key="#Notifications/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1605062058040" />
+    <state x="711" y="344" key="#Notifications/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1605236124527" />
     <state x="740" y="261" key="FileChooserDialogImpl" timestamp="1605061621417">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="261" key="FileChooserDialogImpl/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1605061621417" />
-    <state x="461" y="165" key="SettingsEditor" timestamp="1605061641787">
+    <state x="184" y="86" key="MergeDialog" timestamp="1605230165596">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="461" y="165" key="SettingsEditor/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1605061641787" />
+    <state x="184" y="86" key="MergeDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1605230165596" />
+    <state x="461" y="165" key="SettingsEditor" timestamp="1605236142230">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="461" y="165" key="SettingsEditor/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1605236142230" />
+    <state x="777" y="434" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1605230129654">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="777" y="434" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1605230129654" />
   </component>
 </project>
