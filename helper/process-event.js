@@ -4,77 +4,51 @@
 
 const fs = require('fs')
 const path = require('path')
-const parse = require('csv-parse')
-const transform = require('stream-transform')
-const stringify = require('csv-stringify')
+const parse = require('./parse')
+const exportResult = require('./export-result')
+const nameFilter = require('./name-filter')
 const _ = require('lodash')
 
 const {
-    commaRegex,
-    isEmpty,
-    isEqual,
-    splitByComma,
     clearRole
 } = require('./common')
 
 module.exports = function process(fileObj, options) {
-    // OPTIONS
-    const {
-        DATASET_DIR_NAME,
-        OUTPUT_DIR_NAME
-    } = options;
+    console.log('\x1b[44m%s\x1b[0m',`>>> ${fileObj.fileName} is processing... <<<`)
+    return new Promise((resolve, reject) => {
+        // OPTIONS
+        const {
+            DATASET_DIR_NAME,
+            OUTPUT_DIR_NAME,
+            EXCLUDE_NAMES
+        } = options;
 
-    // PATHS
-    const inputFilePath = path.resolve(DATASET_DIR_NAME, fileObj.fileName);
-    const outputFilePath = path.resolve(OUTPUT_DIR_NAME, fileObj.fileName);
+        let output = [];
+        const filter = new nameFilter(EXCLUDE_NAMES);
 
-    // PARSER
-    let output = [];
+        // PATHS
+        const inputFilePath = path.resolve(DATASET_DIR_NAME, fileObj.fileName);
+        const outputFilePath = path.resolve(OUTPUT_DIR_NAME, fileObj.fileName);
 
-    /**
-     * PARSER
-     */
-    const parser = parse({
-        bom: true,
-        relax: true,
-        columns: true,
-        delimiter: ',',
-        ltrim: true,
-        rtrim: true,
-        // from_line: 1,
-        // to_line: 200,
-        on_record: record => {
-            record = _.compact(_.split(_.get(record, 'Event'),commaRegex));
-            record = _.map(record,clearRole)
+        /**
+         * PARSER
+         */
+        const parser = parse(record => {
+            record = _.get(record, 'Event');
+            record = _.compact(_.split(record,/[,、;\n]+/gi));
+            record = _.map(record, clearRole)
             return record;
-        }
-    }).on('data', data => {
-       output = _.concat(output, data);
-    }).on('end', () => {
-        output = _.uniqWith(output, _.isEqual);
-        output = _.zip(output);
-        exportResult(output);
-    });
-
-    /**
-     * EXPORT
-     * @param result
-     */
-    const exportResult = function (result) {
-        console.log(result);
-        // STRINGIFIER OUTPUT
-        stringify(result, {
-            header: true,
-            columns: ['Name']
-        }, function (err, output) {
-            if (err) throw err;
-            fs.writeFile(outputFilePath, output, (err) => {
-                if (err) throw err;
-                console.log(`${outputFilePath} saved. [Result: ${result.length}]`);
-            });
+        }).on('data', data => {
+            output = _.concat(output, data);
+        }).on('end', async () => {
+            output = _.uniqWith(output, _.isEqual);
+            output = _.zip(output);
+            output = filter.apply(output);
+            const result = await exportResult(output, ['Name'], outputFilePath, false);
+            resolve(result);
         });
-    }
 
-    // READER STREAM
-    fs.createReadStream(inputFilePath).pipe(parser);
+        // READER STREAM
+        fs.createReadStream(inputFilePath).pipe(parser);
+    })
 }

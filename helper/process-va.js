@@ -4,9 +4,9 @@
 
 const fs = require('fs')
 const path = require('path')
-const parse = require('csv-parse')
-const transform = require('stream-transform')
-const stringify = require('csv-stringify')
+const parse = require('./parse')
+const exportResult = require('./export-result')
+const nameFilter = require('./name-filter')
 const _ = require('lodash')
 
 const {
@@ -18,69 +18,44 @@ const {
 } = require('./common')
 
 module.exports = function process(fileObj, options) {
-    // OPTIONS
-    const {
-        DATASET_DIR_NAME,
-        OUTPUT_DIR_NAME
-    } = options;
+    console.log('\x1b[44m%s\x1b[0m',`>>> ${fileObj.fileName} is processing... <<<`)
+    return new Promise((resolve, reject) => {
+        const {
+            DATASET_DIR_NAME,
+            OUTPUT_DIR_NAME,
+            EXCLUDE_NAMES
+        } = options;
 
-    // PATHS
-    const inputFilePath = path.resolve(DATASET_DIR_NAME, fileObj.fileName);
-    const outputFilePath = path.resolve(OUTPUT_DIR_NAME, fileObj.fileName);
+        let output = [];
+        const filter = new nameFilter(EXCLUDE_NAMES);
 
-    // PARSER
-    let output = [];
+        const inputFilePath = path.resolve(DATASET_DIR_NAME, fileObj.fileName);
+        const outputFilePath = path.resolve(OUTPUT_DIR_NAME, fileObj.fileName);
 
-    /**
-     * PARSER
-     */
-    const parser = parse({
-        bom: true,
-        relax: true,
-        columns: true,
-        delimiter: ',',
-        ltrim: true,
-        rtrim: true,
-        // from_line: 1,
-        // to_line: 200,
-        on_record: record => {
+        /**
+         * PARSER
+         */
+        const parser = parse(record => {
             record = _.pick(record, fileObj.cols);
-            record = _.mapValues(record, o => _.split(o,/[,、,;\/\n]/gi));
+            record = _.mapValues(record, o => _.split(o,/[,、;\/\n]/gi));
             record = _.zip(record[fileObj.cols[0]], record[fileObj.cols[1]]);
             return record;
-        }
-    }).on('data', data => {
-        output = _.concat(output, data);
-    }).on('end', () => {
-        output = _.map(output, o => {
-           return _.map(o, i => {
-               return isEmpty(i) ? '' : _.trim(i);
-           })
-        });
-        output = _.filter(output, o => !isEmpty(o[0]) || !isEmpty(o[1]));
-        output = _.uniqWith(output, _.isEqual);
-        exportResult(output);
-    });
-
-    /**
-     * EXPORT
-     * @param result
-     */
-    const exportResult = function (result) {
-        // console.log(result);
-        // STRINGIFIER OUTPUT
-        stringify(result, {
-            header: true,
-            columns: ['Eng','Chi']
-        }, function (err, output) {
-            if (err) throw err;
-            fs.writeFile(outputFilePath, output, (err) => {
-                if (err) throw err;
-                console.log(`${outputFilePath} saved. [Result: ${result.length}]`);
+        }).on('data', data => {
+            output = _.concat(output, data);
+        }).on('end', async () => {
+            output = _.map(output, o => {
+                return _.map(o, i => {
+                    return isEmpty(i) ? '' : _.trim(clearRole(i));
+                })
             });
+            output = _.filter(output, o => !isEmpty(o[0]) || !isEmpty(o[1]));
+            output = _.uniqWith(output, _.isEqual);
+            output = filter.apply(output);
+            const result = await exportResult(output, ['Eng','Chi'], outputFilePath, false);
+            resolve(result);
         });
-    }
 
-    // READER STREAM
-    fs.createReadStream(inputFilePath).pipe(parser);
+        // READER STREAM
+        fs.createReadStream(inputFilePath).pipe(parser);
+    })
 }

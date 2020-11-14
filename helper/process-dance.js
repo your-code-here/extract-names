@@ -4,9 +4,9 @@
 
 const fs = require('fs')
 const path = require('path')
-const parse = require('csv-parse')
-const transform = require('stream-transform')
-const stringify = require('csv-stringify')
+const parse = require('./parse')
+const exportResult = require('./export-result')
+const nameFilter = require('./name-filter')
 const _ = require('lodash')
 
 const {
@@ -19,84 +19,65 @@ const {
 
 
 module.exports = function process(fileObj, options) {
-    // OPTIONS
-    const {
-        DATASET_DIR_NAME,
-        OUTPUT_DIR_NAME
-    } = options;
+    console.log('\x1b[44m%s\x1b[0m',`>>> ${fileObj.fileName} is processing... <<<`)
+    return new Promise((resolve, reject) => {
+        // OPTIONS
+        const {
+            DATASET_DIR_NAME,
+            OUTPUT_DIR_NAME,
+            EXCLUDE_NAMES
+        } = options;
 
-    // PATHS
-    const inputFilePath = path.resolve(DATASET_DIR_NAME, fileObj.fileName);
-    const outputFilePath = path.resolve(OUTPUT_DIR_NAME, fileObj.fileName);
+        let output = [];
+        const filter = new nameFilter(EXCLUDE_NAMES);
+        const inputFilePath = path.resolve(DATASET_DIR_NAME, fileObj.fileName);
+        const outputFilePath = path.resolve(OUTPUT_DIR_NAME, fileObj.fileName);
 
-    // PARSER
-    let output = [];
+        /**
+         * PARSER
+         */
 
-    /**
-     * PARSER
-     */
-    const parser = parse({
-        bom: true,
-        relax: true,
-        columns: true,
-        delimiter: ',',
-        ltrim: true,
-        rtrim: true,
-        // from_line: 1,
-        // to_line: 200,
-        on_record: record => _.pick(record, fileObj.cols)
-    }).on('data', data => {
-        data = Object.values(data);
-        data = _.chunk(data,2);
-        data = _.filter(data, o => !isEmpty(_.head(o)) || !isEmpty(_.last(o)));
-        data = _.map(data, o => {
-            let chi = _.replace(o[0], /\s{5,}/gi, ',');
-            chi = splitByComma(chi);
-            chi = _.map(chi, clearRole);
-            let eng = _.replace(o[1], /\s{5,}/gi, ',');
-            eng = splitByComma(eng);
-            eng = _.map(eng, clearRole);
-            return [eng, chi];
+        const colPairs = _.chunk(fileObj.cols, 2);
+        const parser = parse(record => {
+            record = _.pick(record, fileObj.cols);
+            record = _.mapValues(record, o => {
+                let _tmp = _.replace(o, /\s{5,}/gi, ',');
+                _tmp = splitByComma(_tmp);
+                _tmp = _.map(_tmp, i =>{
+                    i = clearRole(i);
+                    return _.trim(i);
+                })
+                return _tmp;
+            })
+
+            record = _.reduce(colPairs, (result, colPair) => {
+                const arrChi = _.get(record,colPair[0],[]);
+                const arrEng = _.get(record,colPair[1],[]);
+                return _.concat(result, _.unzip([arrEng, arrChi]))
+            }, []);
+
+            record = _.map(record, o => {
+               return _.map(o, i => {
+                   return isEmpty(i) ? '' : _.trim(i);
+               })
+            });
+
+            record = _.reject(record, o => {
+                return _.every(o, isEmpty);
+            });
+
+            return record;
+        }).on('data', data => {
+            output = _.concat(output, data);
+        }).on('end', async () =>{
+            output = _.filter(output, o => !isEmpty(o[0]) || !isEmpty(o[1]));
+            output = _.uniqWith(output, _.isEqual);
+            output = filter.apply(output);
+            const result = await exportResult(output, ['Eng','Chi'], outputFilePath, false);
+            resolve(result);
         });
 
-        data = _.map(data, o => {
-            return _.zipWith(o[0], o[1],function (eng, chi) {
-                return [eng, chi];
-            });
-        })
-
-        data = _.flatten(data);
-        // console.log(data);
-
-        output = _.concat(output, data);
-    }).on('end', function () {
-        output = _.uniqWith(output, _.isEqual);
-        exportResult(output);
-    });
-
-    /**
-     * EXPORT
-     * @param result
-     */
-    const exportResult = function (result) {
-        console.log(result);
-        // STRINGIFIER OUTPUT
-        stringify(result, {
-            header: true,
-            columns: {
-                eng: 'Eng',
-                chi: 'Chi'
-            }
-        }, function (err, output) {
-            if (err) throw err;
-            fs.writeFile(outputFilePath, output, (err) => {
-                if (err) throw err;
-                console.log(`${outputFilePath} saved. [Result: ${result.length}]`);
-            });
-        });
-    }
-
-    // READER STREAM
-    const readerStream = fs.createReadStream(inputFilePath);
-    readerStream.pipe(parser);
+        // READER STREAM
+        fs.createReadStream(inputFilePath).pipe(parser);
+    })
 }
