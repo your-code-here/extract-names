@@ -20,23 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02aaa347-b884-423a-b337-f002c95050cd" name="Default Changelist" comment="Update">
-      <change afterPath="$PROJECT_DIR$/data-result/15112020.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data-result/1013VA.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data-result/1013VA.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data-result/1318VA.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data-result/1318VA.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data-result/dance.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data-result/dance.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data-result/drama.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data-result/drama.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data-result/music.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data-result/music.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data-result/theatre.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data-result/theatre.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data-result/xiqu.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data-result/xiqu.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasets/~$xiqu.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/helper/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/helper/common.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helper/parse.js" beforeDir="false" afterPath="$PROJECT_DIR$/helper/parse.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helper/process-dance.js" beforeDir="false" afterPath="$PROJECT_DIR$/helper/process-dance.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helper/process-event.js" beforeDir="false" afterPath="$PROJECT_DIR$/helper/process-event.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helper/process-music.js" beforeDir="false" afterPath="$PROJECT_DIR$/helper/process-music.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helper/process-va.js" beforeDir="false" afterPath="$PROJECT_DIR$/helper/process-va.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +71,7 @@
       <workItem from="1605199487346" duration="4402000" />
       <workItem from="1605286168182" duration="929000" />
       <workItem from="1605317871998" duration="19941000" />
-      <workItem from="1605456786181" duration="5745000" />
+      <workItem from="1605456786181" duration="6177000" />
     </task>
     <task id="LOCAL-00001" summary="Update">
       <created>1605238031894</created>
