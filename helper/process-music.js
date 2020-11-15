@@ -33,7 +33,7 @@ module.exports = function process(fileObj, options) {
         // PARSER
         const parser = parse(record => {
             record = _.pick(record, fileObj.cols);
-            record = _.mapValues(record, o => _.compact(_.split(o,/[;\n]+/gi)));
+            record = _.mapValues(record, o => _.split(o,/[;\n]+/gi));
             const record_1 = _.zip(record[fileObj.cols[0]], record[fileObj.cols[1]]);
             const record_2 = _.zip(record[fileObj.cols[2]], record[fileObj.cols[3]]);
             record = _.concat(record_1, record_2);

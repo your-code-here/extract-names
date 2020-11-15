@@ -19,7 +19,13 @@ const OUTPUT_DIR_NAME = 'data-result'
 const EXCLUDE_ROLES = _.map(['^.$', 'Presenter', 'Performing Group'], o => new RegExp(o,'ig'));
 const EXCLUDE_NAMES = _.map([
     '小學', '中學', '團', '社', '制作', '公司', '設計', '舞蹈', '協會', '協進會', '班',
-    'centre', 'ltd', 'limited', 'group', 'production', 'makeup', 'school', 'college', 'ccdc',
+    'centre', 'ltd', 'limited', 'group', 'production', 'makeup', 'school', 'college', 'ccdc', 'hospital',
+    'course', 'studios', 'artist', 'program', 'from', 'hospita', 'Organization', 'patients', 'etc\\.',
+    'University', 'Architecture', 'project', 'graduates', 'Diploma','Airlines', 'student', 'Education',
+    'College', 'people', 'series', 'showcase', 'Centre', 'musician', 'Exhibition', 'Photographic', 'people',
+    'Graphicairline', 'teenager', 'Master', 'Showroom', 'Class', 'Collection', 'International', 'Library',
+    'Association', 'Document', 'Society', 'Studio', 'Company', 'Contributor', 'organiser', 'publisher',
+    'their', 'recent', 'Industries',
     'Op\\.', 'No\\.'
 ], o => new RegExp(o,'ig'));
 
@@ -68,12 +74,12 @@ const parser = parse({
     };
 
     await processMusic(musicFile, options);
-    await processDance(danceFile,options);
-    await processEvent(dramaFile, options)
-    await processEvent(theatreFile, options)
-    await processEvent(xiquFile, options)
-    await processVa(va1013File, options)
-    await processVa(va1318File, options)
+    // await processDance(danceFile,options);
+    // await processEvent(dramaFile, options)
+    // await processEvent(theatreFile, options)
+    // await processEvent(xiquFile, options)
+    // await processVa(va1013File, options)
+    // await processVa(va1318File, options)
 });
 
 // READER STREAM

@@ -10,7 +10,8 @@ const nameFilter = require('./name-filter')
 const _ = require('lodash')
 
 const {
-    clearRole
+    clearRole,
+    splitByComma
 } = require('./common')
 
 module.exports = function process(fileObj, options) {
@@ -35,8 +36,9 @@ module.exports = function process(fileObj, options) {
          */
         const parser = parse(record => {
             record = _.get(record, 'Event');
-            record = _.compact(_.split(record,/[,、;\n]+/gi));
+            record = _.compact(splitByComma(record));
             record = _.map(record, clearRole)
+            // console.log(record);
             return record;
         }).on('data', data => {
             output = _.concat(output, data);

@@ -14,7 +14,7 @@ module.exports = function parseDataToStream(on_record) {
         ltrim: true,
         rtrim: true,
         // from_line: 1,
-        // to_line: 300,
+        // to_line: 400,
         on_record
     })
 }

@@ -37,7 +37,7 @@ module.exports = function process(fileObj, options) {
          */
         const parser = parse(record => {
             record = _.pick(record, fileObj.cols);
-            record = _.mapValues(record, o => _.split(o,/[,、;\/\n]/gi));
+            record = _.mapValues(record, o => _.split(o,/[,、､;，﹑\/／\n]/gi));
             record = _.zip(record[fileObj.cols[0]], record[fileObj.cols[1]]);
             return record;
         }).on('data', data => {

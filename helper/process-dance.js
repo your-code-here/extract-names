@@ -40,6 +40,7 @@ module.exports = function process(fileObj, options) {
         const colPairs = _.chunk(fileObj.cols, 2);
         const parser = parse(record => {
             record = _.pick(record, fileObj.cols);
+
             record = _.mapValues(record, o => {
                 let _tmp = _.replace(o, /\s{5,}/gi, ',');
                 _tmp = splitByComma(_tmp);
@@ -62,9 +63,12 @@ module.exports = function process(fileObj, options) {
                })
             });
 
+
+
             record = _.reject(record, o => {
                 return _.every(o, isEmpty);
             });
+
 
             return record;
         }).on('data', data => {

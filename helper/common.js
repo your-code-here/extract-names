@@ -8,7 +8,7 @@ const _ = require('lodash')
         DECLARE
 \***********************/
 
-const commaRegex = /[,、;，\n]+|/gi
+const commaRegex = /[,、､;，﹑\n]+/gi
 
 function isEmpty(value) {
     if (!value) return true;
